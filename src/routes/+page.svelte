@@ -18,6 +18,9 @@
 		cal: 0,
 		grd: 0
 	});
+	let ftp: number = Number(env.PUBLIC_FTP) | 0;
+	let zones = [ftp * 0.6, ftp * 0.75, ftp * 0.89, ftp * 1.04, ftp * 1.18, 10000];
+	let activeZone: number = $state(1);
 
 	async function fetchLocation() {
 		try {
@@ -48,6 +51,20 @@
 		return hours + ':' + minutes + ':' + seconds;
 	}
 
+	function pwrToZone(power: number) {
+		for (let i = 0; i < zones.length; i++) {
+			if (power <= zones[i]) {
+				return i + 1;
+			}
+		}
+
+		return 1;
+	}
+
+	$effect(() => {
+		activeZone = pwrToZone(live.pwr);
+	});
+
 	$effect(() => {
 		fetchLocation();
 		const intervalId = setInterval(fetchLocation, 2500);
@@ -72,4 +89,5 @@
 	<p>Total Descent: {live.asc} m</p>
 	<p>Calories: {live.cal} m</p>
 	<p>Grade: {live.grd}</p>
+	<p>Power Zone: {activeZone}</p>
 {/if}
