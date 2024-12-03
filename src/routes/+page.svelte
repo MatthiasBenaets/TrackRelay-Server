@@ -36,6 +36,18 @@
 		}
 	}
 
+	function msToTime(duration: number) {
+		var seconds: string | number = Math.floor((duration / 1000) % 60),
+			minutes: string | number = Math.floor((duration / (1000 * 60)) % 60),
+			hours: string | number = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+		hours = hours < 10 ? '0' + hours : hours;
+		minutes = minutes < 10 ? '0' + minutes : minutes;
+		seconds = seconds < 10 ? '0' + seconds : seconds;
+
+		return hours + ':' + minutes + ':' + seconds;
+	}
+
 	$effect(() => {
 		fetchLocation();
 		const intervalId = setInterval(fetchLocation, 2500);
@@ -48,7 +60,7 @@
 	<p>Latitude: {live.lat}</p>
 	<p>Longitude: {live.lon}</p>
 	<p>Altitude: {live.alt}</p>
-	<p>Time: {live.time}</p>
+	<p>Time: {msToTime(live.time)}</p>
 	<p>Distance: {live.dist / 1000} km</p>
 	<p>Speed: {live.spd * 3.6} km/h</p>
 	<p>Speed: {live.spd * 2.237} mph</p>
