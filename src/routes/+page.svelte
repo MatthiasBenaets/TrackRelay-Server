@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import Leaflet from '$lib/components/Leaflet.svelte';
 
 	let live = $state({
 		type: 'id',
@@ -67,7 +68,7 @@
 
 	$effect(() => {
 		fetchLocation();
-		const intervalId = setInterval(fetchLocation, 2500);
+		const intervalId = setInterval(fetchLocation, Number(env.PUBLIC_REFRESH_RATE) * 1000);
 		return () => clearInterval(intervalId);
 	});
 </script>
@@ -91,3 +92,5 @@
 	<p>Grade: {live.grd}</p>
 	<p>Power Zone: {activeZone}</p>
 {/if}
+
+<Leaflet view={[live.lat, live.lon]} zoom={15} classes="w-full h-[300px]"></Leaflet>
