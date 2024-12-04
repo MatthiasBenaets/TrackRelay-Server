@@ -5,6 +5,9 @@
 	import { msToTime, pwrToZone } from '$lib/utils';
 	import { fetchLiveData } from '$lib/api';
 	import type { LiveData } from '$lib/types';
+	import Graph from '$lib/components/Graph.svelte';
+	let pwr = $state(Array(240).fill(0));
+	let hr = $state(Array(240).fill(0));
 
 	let live: LiveData = $state({
 		type: 'id',
@@ -27,6 +30,8 @@
 	setInterval(
 		async () => {
 			live = await fetchLiveData();
+			pwr.push(live.pwr);
+			hr.push(live.hr);
 		},
 		Number(env.PUBLIC_REFRESH_RATE) * 1000
 	);
@@ -285,3 +290,7 @@
 		</div>
 	</div>
 {/if}
+
+<div class="absolute bottom-0 left-0">
+	<Graph {pwr} {hr} />
+</div>

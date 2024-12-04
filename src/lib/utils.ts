@@ -13,7 +13,7 @@ export function msToTime(duration: number) {
 }
 
 const ftp: number = Number(env.PUBLIC_FTP) | 0;
-const zones = [ftp * 0.6, ftp * 0.75, ftp * 0.89, ftp * 1.04, ftp * 1.18, 10000];
+export const zones = [ftp * 0.6, ftp * 0.75, ftp * 0.89, ftp * 1.04, ftp * 1.18, 10000];
 export function pwrToZone(power: number) {
 	for (let i = 0; i < zones.length; i++) {
 		if (power <= zones[i]) {
