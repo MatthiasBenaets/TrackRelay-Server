@@ -6,7 +6,10 @@
 	import { fetchLiveData } from '$lib/api';
 	import type { LiveData } from '$lib/types';
 	import Graph from '$lib/components/Graph.svelte';
-	let pwr = $state(Array(240).fill(0));
+	import Distribution from '$lib/components/Distribution.svelte';
+
+	let pwrGraph = $state(Array(240).fill(0));
+	let pwrDist = $state([]);
 	let hr = $state(Array(240).fill(0));
 
 	let zone = $state(1);
@@ -33,7 +36,8 @@
 	setInterval(
 		async () => {
 			live = await fetchLiveData();
-			pwr.push(live.pwr);
+			pwrGraph.push(live.pwr);
+			pwrDist.push(live.pwr);
 			hr.push(live.hr);
 		},
 		Number(env.PUBLIC_REFRESH_RATE) * 1000
@@ -51,7 +55,7 @@
 	<div class="poppins-bold relative h-[1080px] w-[1920px] text-white">
 		<div class="absolute left-[1%] top-[2%] h-[25%] w-[17%] rounded-xl bg-black/50">
 			<div class="relative h-full w-full px-5">
-				<div class="flex h-[40%] flex-row">
+				<div class="flex h-[30%] flex-row">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
@@ -76,7 +80,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="grid h-[60%] grid-cols-2 gap-x-10">
+				<div class="h-[20%]">
+					<Distribution pwr={pwrDist} />
+				</div>
+				<div class="grid h-[50%] grid-cols-2 gap-x-10">
 					<div class="flex flex-row justify-between">
 						<div class="flex w-1/3 justify-center align-middle">
 							<svg
@@ -297,5 +304,5 @@
 {/if}
 
 <div class="absolute bottom-0 left-0">
-	<Graph {pwr} {hr} />
+	<Graph pwr={pwrGraph} {hr} />
 </div>
