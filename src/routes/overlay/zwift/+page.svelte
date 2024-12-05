@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { tweened } from 'svelte/motion';
+	import { quadOut } from 'svelte/easing';
 	import { env } from '$env/dynamic/public';
 	import Leaflet from '$lib/components/Leaflet.svelte';
 	import Marker from '$lib/components/Marker.svelte';
@@ -35,9 +37,41 @@
 		grd: 0
 	});
 
+	let tweenAlt = tweened(0, {
+		duration: Number(env.PUBLIC_REFRESH_RATE) * 1000,
+		easing: quadOut
+	});
+	let tweenTime = tweened(0, { duration: Number(env.PUBLIC_REFRESH_RATE) * 1000 });
+	let tweenDist = tweened(0, { duration: Number(env.PUBLIC_REFRESH_RATE) * 1000 });
+	let tweenSpd = tweened(0, {
+		duration: Number(env.PUBLIC_REFRESH_RATE) * 1000
+	});
+	let tweenCad = tweened(0, {
+		duration: Number(env.PUBLIC_REFRESH_RATE) * 1000,
+		easing: quadOut
+	});
+	let tweenHr = tweened(0, { duration: Number(env.PUBLIC_REFRESH_RATE) * 1000 });
+	let tweenPwr = tweened(0, {
+		duration: Number(env.PUBLIC_REFRESH_RATE) * 1000,
+		easing: quadOut
+	});
+	let tweenAsc = tweened(0, { duration: Number(env.PUBLIC_REFRESH_RATE) * 1000 });
+	let tweenCal = tweened(0, { duration: Number(env.PUBLIC_REFRESH_RATE) * 1000 });
+	let tweenGrd = tweened(0, { duration: Number(env.PUBLIC_REFRESH_RATE) * 1000 });
+
 	setInterval(
 		async () => {
 			live = await fetchLiveData();
+			tweenAlt.set(live.alt);
+			tweenTime.set(live.time);
+			tweenDist.set(live.dist);
+			tweenSpd.set(live.spd);
+			tweenCad.set(live.cad);
+			tweenHr.set(live.hr);
+			tweenPwr.set(live.pwr);
+			tweenAsc.set(live.asc);
+			tweenCal.set(live.cal);
+			tweenGrd.set(live.grd);
 			pwrGraph.push(live.pwr);
 			pwrDist.push(live.pwr);
 			hrGraph.push(live.hr);
@@ -86,7 +120,7 @@
 					</svg>
 					<div class="flex w-4/5 items-center justify-end">
 						<div class="flex flex-row items-end">
-							<span class="text-7xl">{live.pwr}</span>
+							<span class="text-7xl">{Math.round($tweenPwr)}</span>
 							<span class="pb-1 text-4xl">W</span>
 						</div>
 					</div>
@@ -116,7 +150,7 @@
 							</svg>
 						</div>
 						<div class="flex w-2/3 flex-col text-right">
-							<span class="-m-1 text-3xl">{live.cad / 2}</span>
+							<span class="-m-1 text-3xl">{Math.round($tweenCad / 2)}</span>
 							<span class="-m-1 text-xl">RPM</span>
 						</div>
 					</div>
@@ -141,7 +175,7 @@
 							</svg>
 						</div>
 						<div class="flex w-2/3 flex-col text-right">
-							<span class="-m-1 text-3xl">{live.hr}</span>
+							<span class="-m-1 text-3xl">{Math.round($tweenHr)}</span>
 							<span class="-m-1 text-xl">BPM</span>
 						</div>
 					</div>
@@ -165,7 +199,7 @@
 							</svg>
 						</div>
 						<div class="flex w-2/3 flex-col text-right">
-							<span class="-m-1 text-3xl">{Math.round(live.alt * 1)}</span>
+							<span class="-m-1 text-3xl">{Math.round($tweenAlt)}</span>
 							<span class="-m-1 text-xl">ALT</span>
 						</div>
 					</div>
@@ -190,7 +224,7 @@
 							</svg>
 						</div>
 						<div class="flex w-2/3 flex-col text-right">
-							<span class="-m-1 text-3xl">{live.cal}</span>
+							<span class="-m-1 text-3xl">{Math.round($tweenCal)}</span>
 							<span class="-m-1 text-xl">CAL</span>
 						</div>
 					</div>
@@ -203,7 +237,7 @@
 			<div class="relative mx-auto h-full w-[40%] rounded-xl bg-black/50">
 				<div class="mx-5 grid h-full auto-cols-max grid-flow-col justify-between">
 					<div class="flex flex-row items-center justify-center">
-						<div class="text-4xl">{(live.spd * 3.6).toFixed(1)}</div>
+						<div class="text-4xl">{($tweenSpd * 3.6).toFixed(1)}</div>
 						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -223,7 +257,7 @@
 						</div>
 					</div>
 					<div class="flex flex-row items-center justify-center">
-						<div class="text-4xl">{(live.dist / 1000).toFixed(1)}</div>
+						<div class="text-4xl">{($tweenDist / 1000).toFixed(1)}</div>
 						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -244,7 +278,7 @@
 						</div>
 					</div>
 					<div class="flex flex-row items-center justify-center">
-						<div class="text-4xl">{Math.round(live.asc * 1)}</div>
+						<div class="text-4xl">{Math.round($tweenAlt)}</div>
 						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -264,7 +298,7 @@
 						</div>
 					</div>
 					<div class="flex flex-row items-center justify-center">
-						<div class="truncate text-4xl">{msToTime(live.time)}</div>
+						<div class="truncate text-4xl">{msToTime($tweenTime)}</div>
 						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -325,24 +359,24 @@
 				<div class="font-outline-2 flex flex-row font-bold text-white">
 					<span
 						class="z-10 text-4xl"
-						style="color: {live.grd >= 8
+						style="color: {$tweenGrd >= 8
 							? zones[5].color
-							: live.grd >= 4
+							: $tweenGrd >= 4
 								? zones[3].color
-								: 'white'}">{Math.round(live.grd * 1)}</span
+								: 'white'}">{Math.round($tweenGrd)}</span
 					>
 					<span class="font-outline-2 z-10 text-2xl"> % </span>
 					<div class="absolute right-2 top-9 z-0">
 						<svg
 							width="50"
-							height={Math.tan((Math.max(-20, Math.min(20, live.grd)) * Math.PI) / 180) * 50 * 2.5}
+							height={Math.tan((Math.max(-20, Math.min(20, $tweenGrd)) * Math.PI) / 180) * 50 * 2.5}
 							style="overflow: visible;"
 						>
 							<polygon
 								points="
               0,0
               50,0
-              50,{-Math.tan((Math.max(-20, Math.min(20, live.grd)) * Math.PI) / 180) * 50 * 2.5}
+              50,{-Math.tan((Math.max(-20, Math.min(20, $tweenGrd)) * Math.PI) / 180) * 50 * 2.5}
             "
 								fill="black"
 								stroke="white"
@@ -354,8 +388,8 @@
 			</div>
 			<div class="absolute bottom-0 z-10 flex h-6 w-full flex-row justify-between bg-black/50 px-5">
 				<span>{env.PUBLIC_ATHLETE}</span>
-				<span style="color: {live.pwr / Number(env.PUBLIC_WEIGHT) >= 8 ? zones[5].color : 'white'}"
-					>{(live.pwr / Number(env.PUBLIC_WEIGHT)).toFixed(1)} w/kg</span
+				<span style="color: {$tweenPwr / Number(env.PUBLIC_WEIGHT) >= 8 ? zones[5].color : 'white'}"
+					>{($tweenPwr / Number(env.PUBLIC_WEIGHT)).toFixed(1)} w/kg</span
 				>
 			</div>
 		</div>
