@@ -15,3 +15,11 @@ export interface LiveData {
 	cal: number;
 	grd: number;
 }
+
+export interface LocationData {
+	address: {
+		county: string;
+		town: string;
+		village: string;
+	};
+}

@@ -3,14 +3,16 @@
 	import Leaflet from '$lib/components/Leaflet.svelte';
 	import Marker from '$lib/components/Marker.svelte';
 	import { msToTime, pwrToZone, zones } from '$lib/utils';
-	import { fetchLiveData } from '$lib/api';
-	import type { LiveData } from '$lib/types';
+	import { fetchLiveData, fetchLocationData } from '$lib/api';
+	import type { LiveData, LocationData } from '$lib/types';
 	import Graph from '$lib/components/Graph.svelte';
 	import Distribution from '$lib/components/Distribution.svelte';
 
 	let pwrGraph: number[] = $state(Array(240).fill(0));
 	let pwrDist: number[] = $state([]);
 	let hr: number[] = $state(Array(240).fill(0));
+
+	let location: LocationData = $state();
 
 	let zone = $state(1);
 	let zoneColor = $state('rgb(107 114 128)');
@@ -41,6 +43,14 @@
 			hr.push(live.hr);
 		},
 		Number(env.PUBLIC_REFRESH_RATE) * 1000
+	);
+
+	setInterval(
+		async () => {
+			let response: LocationData = await fetchLocationData(live.lat, live.lon);
+			location = response;
+		},
+		Number(env.PUBLIC_REFRESH_RATE) * 20000
 	);
 
 	$effect(() => {
@@ -226,10 +236,11 @@
 								stroke-linecap="round"
 								stroke-linejoin="round"
 							>
-								<path d="m12 14 4-4" />
-								<path d="M3.34 19a10 10 0 1 1 17.32 0" />
+								<circle cx="6" cy="19" r="3" />
+								<path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15" />
+								<circle cx="18" cy="5" r="3" />
 							</svg>
-							<span class="text-md">KM/H</span>
+							<span class="text-md">KM</span>
 						</div>
 					</div>
 					<div class="flex flex-row items-center justify-center">
@@ -294,38 +305,58 @@
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							class="fill-orange-600 stroke-white stroke-2 pb-[25px]"
-							><path
-								d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
-							/><circle cx="12" cy="10" r="3" /></svg
 						>
+							<path
+								d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+							/>
+							<circle cx="12" cy="10" r="3" />
+						</svg>
 					</Marker>
 				</Leaflet>
 			</div>
-			<div class="font-outline-2 absolute right-2 top-2 z-10 font-bold text-white">
-				<span
-					class="text-4xl"
-					style="color: {live.grd >= 8 ? zones[5].color : live.grd >= 4 ? zones[3].color : 'white'}"
-					>{Math.round(live.grd * 1)}</span
-				>
-				<span class="font-outline-2 text-2xl"> % </span>
+			<div class="absolute top-0 z-10 h-6 w-full bg-black/50 px-5">
+				{#if location}
+					<div>{location.address.town || location.address.village}, {location.address.country}</div>
+				{:else}
+					<div>Retrieving location...</div>
+				{/if}
 			</div>
-			<div class="absolute right-2 top-11 z-0">
-				<svg
-					width="50"
-					height={Math.tan((Math.max(-25, Math.min(25, live.grd)) * Math.PI) / 180) * 50 * 2.5}
-					style="overflow: visible;"
-				>
-					<polygon
-						points="
+			<div class="z-12 absolute right-2 top-8 flex items-end justify-end">
+				<div class="font-outline-2 flex flex-row font-bold text-white">
+					<span
+						class="z-10 text-4xl"
+						style="color: {live.grd >= 8
+							? zones[5].color
+							: live.grd >= 4
+								? zones[3].color
+								: 'white'}">{Math.round(live.grd * 1)}</span
+					>
+					<span class="font-outline-2 z-10 text-2xl"> % </span>
+					<div class="absolute right-2 top-9 z-0">
+						<svg
+							width="50"
+							height={Math.tan((Math.max(-20, Math.min(20, live.grd)) * Math.PI) / 180) * 50 * 2.5}
+							style="overflow: visible;"
+						>
+							<polygon
+								points="
               0,0
               50,0
-              50,{-Math.tan((Math.max(-25, Math.min(25, live.grd)) * Math.PI) / 180) * 50 * 2.5}
+              50,{-Math.tan((Math.max(-20, Math.min(20, live.grd)) * Math.PI) / 180) * 50 * 2.5}
             "
-						fill="black"
-						stroke="white"
-						stroke-width="1"
-					/>
-				</svg>
+								fill="black"
+								stroke="white"
+								stroke-width="1"
+							/>
+						</svg>
+					</div>
+				</div>
+			</div>
+			<div class="absolute bottom-0 z-10 flex h-6 w-full flex-row justify-between bg-black/50 px-5">
+				<span>{env.PUBLIC_ATHLETE}</span>
+				<span style="color: {live.pwr / Number(env.PUBLIC_WEIGHT) >= 8 ? zones[5].color : 'white'}"
+					>{(live.pwr / Number(env.PUBLIC_WEIGHT)).toFixed(1)} w/kg</span
+				>
 			</div>
 		</div>
 	</div>
