@@ -10,9 +10,9 @@
 
 	let pwrGraph: number[] = $state(Array(240).fill(0));
 	let pwrDist: number[] = $state([]);
-	let hr: number[] = $state(Array(240).fill(0));
+	let hrGraph: number[] = $state(Array(240).fill(0));
 
-	let location: LocationData = $state();
+	let location: LocationData | undefined = $state(undefined);
 
 	let zone = $state(1);
 	let zoneColor = $state('rgb(107 114 128)');
@@ -40,7 +40,7 @@
 			live = await fetchLiveData();
 			pwrGraph.push(live.pwr);
 			pwrDist.push(live.pwr);
-			hr.push(live.hr);
+			hrGraph.push(live.hr);
 		},
 		Number(env.PUBLIC_REFRESH_RATE) * 1000
 	);
@@ -62,8 +62,8 @@
 </script>
 
 {#if live}
-	<!-- Left data field -->
 	<div class="poppins-bold relative h-[1080px] w-[1920px] text-white">
+		<!-- Left data field -->
 		<div class="absolute left-[1%] top-[2%] h-[25%] w-[17%] rounded-xl bg-black/50">
 			<div class="relative h-full w-full px-5">
 				<div class="flex h-[30%] flex-row">
@@ -359,12 +359,12 @@
 				>
 			</div>
 		</div>
-	</div>
 
-	<!-- Bottom graph field -->
-	<div class="absolute bottom-0 left-0 text-white opacity-75">
-		<div class="absolute -top-3 left-2">PWR</div>
-		<div class="absolute -top-3 right-2">HR</div>
-		<Graph pwr={pwrGraph} {hr} />
+		<!-- Bottom graph field -->
+		<div class="absolute bottom-0 left-0 text-white opacity-75">
+			<div class="absolute -top-3 left-2">PWR</div>
+			<div class="absolute -top-3 right-2">HR</div>
+			<Graph pwr={pwrGraph} hr={hrGraph} />
+		</div>
 	</div>
 {/if}

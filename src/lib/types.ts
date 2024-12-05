@@ -18,7 +18,7 @@ export interface LiveData {
 
 export interface LocationData {
 	address: {
-		county: string;
+		country: string;
 		town: string;
 		village: string;
 	};
