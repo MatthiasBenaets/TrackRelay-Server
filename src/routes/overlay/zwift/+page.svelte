@@ -8,9 +8,9 @@
 	import Graph from '$lib/components/Graph.svelte';
 	import Distribution from '$lib/components/Distribution.svelte';
 
-	let pwrGraph = $state(Array(240).fill(0));
-	let pwrDist = $state([]);
-	let hr = $state(Array(240).fill(0));
+	let pwrGraph: number[] = $state(Array(240).fill(0));
+	let pwrDist: number[] = $state([]);
+	let hr: number[] = $state(Array(240).fill(0));
 
 	let zone = $state(1);
 	let zoneColor = $state('rgb(107 114 128)');
@@ -52,6 +52,7 @@
 </script>
 
 {#if live}
+	<!-- Left data field -->
 	<div class="poppins-bold relative h-[1080px] w-[1920px] text-white">
 		<div class="absolute left-[1%] top-[2%] h-[25%] w-[17%] rounded-xl bg-black/50">
 			<div class="relative h-full w-full px-5">
@@ -187,12 +188,13 @@
 			</div>
 		</div>
 
-		<div class="absolute top-[2%] h-[10%] w-full">
-			<div class="relative mx-auto h-full w-[40%] rounded-xl bg-black/50 p-5">
-				<div class="flex h-full w-full flex-row">
-					<div class="flex w-1/4 flex-row items-center">
+		<!-- Middle data field -->
+		<div class="absolute top-[2%] h-[7%] w-full">
+			<div class="relative mx-auto h-full w-[40%] rounded-xl bg-black/50">
+				<div class="mx-5 grid h-full auto-cols-max grid-flow-col justify-between">
+					<div class="flex flex-row items-center justify-center">
 						<div class="text-4xl">{(live.spd * 3.6).toFixed(1)}</div>
-						<div class="flex flex-col">
+						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
@@ -203,14 +205,16 @@
 								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								class=""><path d="m12 14 4-4" /><path d="M3.34 19a10 10 0 1 1 17.32 0" /></svg
 							>
-							<span>KM/H</span>
+								<path d="m12 14 4-4" />
+								<path d="M3.34 19a10 10 0 1 1 17.32 0" />
+							</svg>
+							<span class="text-md">KM/H</span>
 						</div>
 					</div>
-					<div class="flex w-1/4 flex-row items-center">
+					<div class="flex flex-row items-center justify-center">
 						<div class="text-4xl">{(live.dist / 1000).toFixed(1)}</div>
-						<div class="flex flex-col">
+						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
@@ -221,17 +225,16 @@
 								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								class="lucide lucide-route"
-								><circle cx="6" cy="19" r="3" /><path
-									d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"
-								/><circle cx="18" cy="5" r="3" /></svg
 							>
-							<span>KM</span>
+								<path d="m12 14 4-4" />
+								<path d="M3.34 19a10 10 0 1 1 17.32 0" />
+							</svg>
+							<span class="text-md">KM/H</span>
 						</div>
 					</div>
-					<div class="flex w-1/4 flex-row items-center">
+					<div class="flex flex-row items-center justify-center">
 						<div class="text-4xl">{Math.round(live.asc * 1)}</div>
-						<div class="flex flex-col">
+						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
@@ -242,17 +245,16 @@
 								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								class="lucide lucide-mountain-snow"
-								><path d="m8 3 4 8 5-5 5 15H2L8 3z" /><path
-									d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"
-								/></svg
 							>
-							<span>M</span>
+								<path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+								<path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" />
+							</svg>
+							<span class="text-md">M</span>
 						</div>
 					</div>
-					<div class="flex w-1/4 flex-row items-center">
-						<div class="text-4xl">{msToTime(live.time)}</div>
-						<div class="flex flex-col">
+					<div class="flex flex-row items-center justify-center">
+						<div class="truncate text-4xl">{msToTime(live.time)}</div>
+						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
@@ -263,17 +265,21 @@
 								stroke-width="2"
 								stroke-linecap="round"
 								stroke-linejoin="round"
-								class="lucide lucide-clock"
-								><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg
 							>
-							<span>ET.</span>
+								<circle cx="12" cy="12" r="10" />
+								<polyline points="12 6 12 12 16 14" />
+							</svg>
+							<span class="text-md">ET</span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="absolute right-[1%] top-[2%] h-[25%] w-[20%] rounded-xl bg-black/50 text-black">
+		<!-- Right data field -->
+		<div
+			class="absolute right-[1%] top-[2%] h-[25%] w-[17%] overflow-hidden rounded-xl bg-black/50"
+		>
 			<div class="relative z-0 overflow-hidden rounded-xl">
 				<Leaflet view={[live.lat, live.lon]} zoom={15} classes="w-full h-[300px]">
 					<Marker latLng={[live.lat, live.lon]} width={60} height={60}>
@@ -301,8 +307,11 @@
 			</div>
 		</div>
 	</div>
-{/if}
 
-<div class="absolute bottom-0 left-0">
-	<Graph pwr={pwrGraph} {hr} />
-</div>
+	<!-- Bottom graph field -->
+	<div class="absolute bottom-0 left-0 text-white opacity-75">
+		<div class="absolute -top-3 left-2">PWR</div>
+		<div class="absolute -top-3 right-2">HR</div>
+		<Graph pwr={pwrGraph} {hr} />
+	</div>
+{/if}

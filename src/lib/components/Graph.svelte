@@ -131,6 +131,6 @@
 	});
 </script>
 
-<div class="opacity-75">
+<div>
 	<svg bind:this={chart}></svg>
 </div>
