@@ -302,8 +302,30 @@
 				</Leaflet>
 			</div>
 			<div class="font-outline-2 absolute right-2 top-2 z-10 font-bold text-white">
-				<span class="text-4xl">{Math.round(live.grd * 1)}</span>
+				<span
+					class="text-4xl"
+					style="color: {live.grd >= 8 ? zones[5].color : live.grd >= 4 ? zones[3].color : 'white'}"
+					>{Math.round(live.grd * 1)}</span
+				>
 				<span class="font-outline-2 text-2xl"> % </span>
+			</div>
+			<div class="absolute right-2 top-11 z-0">
+				<svg
+					width="50"
+					height={Math.tan((Math.max(-25, Math.min(25, live.grd)) * Math.PI) / 180) * 50 * 2.5}
+					style="overflow: visible;"
+				>
+					<polygon
+						points="
+              0,0
+              50,0
+              50,{-Math.tan((Math.max(-25, Math.min(25, live.grd)) * Math.PI) / 180) * 50 * 2.5}
+            "
+						fill="black"
+						stroke="white"
+						stroke-width="1"
+					/>
+				</svg>
 			</div>
 		</div>
 	</div>
