@@ -25,21 +25,21 @@ export const POST: RequestHandler = async ({ request }) => {
 		// Parse the JSON payload
 		const payload = await request.json();
 
-		const type = String(payload.type);
-		const lat = Number(payload.lat);
-		const lon = Number(payload.lon);
-		const alt = Number(payload.alt);
-		const time = Number(payload.time);
-		const dist = Number(payload.dist);
-		const spd = Number(payload.spd);
-		const cad = Number(payload.cad);
-		const hr = Number(payload.hr);
-		const pwr = Number(payload.pwr);
-		const avgp = Number(payload.avgp);
-		const asc = Number(payload.asc);
-		const desc = Number(payload.desc);
-		const cal = Number(payload.cal);
-		const grd = Number(payload.grd);
+		const type = String(payload.type) || 'id';
+		const lat = Number(payload.lat) || 0;
+		const lon = Number(payload.lon) || 0;
+		const alt = Number(payload.alt) || 0;
+		const time = Number(payload.time) || 0;
+		const dist = Number(payload.dist) || 0;
+		const spd = Number(payload.spd) || 0;
+		const cad = Number(payload.cad) || 0;
+		const hr = Number(payload.hr) || 0;
+		const pwr = Number(payload.pwr) || 0;
+		const avgp = Number(payload.avgp) || 0;
+		const asc = Number(payload.asc) || 0;
+		const desc = Number(payload.desc) || 0;
+		const cal = Number(payload.cal) || 0;
+		const grd = Number(payload.grd) || 0;
 
 		// Store live data
 		liveData = {
