@@ -64,13 +64,13 @@
 			})
 			.attr('height', (d) => height - yScalePwr(d))
 			.attr('fill', (d) => {
-        // Color bars based on zones
-				if (d < zones[0]) return 'rgb(107 114 128)';
-				else if (d < zones[1]) return 'rgb(107 114 128)';
-				else if (d < zones[2]) return 'rgb(34 197 94)';
-				else if (d < zones[3]) return 'rgb(234 179 8)';
-				else if (d < zones[4]) return 'rgb(249 115 22)';
-				else return 'rgb(239 68 68)';
+				// Color bars based on zones
+				if (d < zones[0].power) return zones[0].color;
+				else if (d < zones[1].power) return zones[1].color;
+				else if (d < zones[2].power) return zones[2].color;
+				else if (d < zones[3].power) return zones[3].color;
+				else if (d < zones[4].power) return zones[4].color;
+				else return zones[5].color;
 			});
 
 		// Heartrate line

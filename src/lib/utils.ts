@@ -13,10 +13,17 @@ export function msToTime(duration: number) {
 }
 
 const ftp: number = Number(env.PUBLIC_FTP) | 0;
-export const zones = [ftp * 0.6, ftp * 0.75, ftp * 0.89, ftp * 1.04, ftp * 1.18, 10000];
+export const zones = [
+	{ name: 'z1', power: ftp * 0.6, color: 'rgb(107 114 128)' },
+	{ name: 'z2', power: ftp * 0.75, color: 'rgb(59 130 246)' },
+	{ name: 'z3', power: ftp * 0.89, color: 'rgb(34 197 94)' },
+	{ name: 'z4', power: ftp * 1.04, color: 'rgb(234 179 8)' },
+	{ name: 'z5', power: ftp * 1.18, color: 'rgb(249 115 22)' },
+	{ name: 'z6', power: 10000, color: 'rgb(239 68 68)' }
+];
 export function pwrToZone(power: number) {
 	for (let i = 0; i < zones.length; i++) {
-		if (power <= zones[i]) {
+		if (power <= zones[i].power) {
 			return i + 1;
 		}
 	}

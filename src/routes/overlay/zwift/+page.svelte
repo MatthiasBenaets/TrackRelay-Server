@@ -2,12 +2,15 @@
 	import { env } from '$env/dynamic/public';
 	import Leaflet from '$lib/components/Leaflet.svelte';
 	import Marker from '$lib/components/Marker.svelte';
-	import { msToTime, pwrToZone } from '$lib/utils';
+	import { msToTime, pwrToZone, zones } from '$lib/utils';
 	import { fetchLiveData } from '$lib/api';
 	import type { LiveData } from '$lib/types';
 	import Graph from '$lib/components/Graph.svelte';
 	let pwr = $state(Array(240).fill(0));
 	let hr = $state(Array(240).fill(0));
+
+	let zone = $state(1);
+	let zoneColor = $state('rgb(107 114 128)');
 
 	let live: LiveData = $state({
 		type: 'id',
@@ -35,6 +38,13 @@
 		},
 		Number(env.PUBLIC_REFRESH_RATE) * 1000
 	);
+
+	$effect(() => {
+		if (live.pwr) {
+			zone = pwrToZone(live.pwr);
+			zoneColor = zones[zone - 1].color;
+		}
+	});
 </script>
 
 {#if live}
@@ -53,12 +63,7 @@
 						stroke-linecap="round"
 						stroke-linejoin="round"
 						class="h-full w-1/5"
-						class:text-gray-500={pwrToZone(live.pwr) === 1}
-						class:text-blue-500={pwrToZone(live.pwr) === 2}
-						class:text-green-500={pwrToZone(live.pwr) === 3}
-						class:text-yellow-500={pwrToZone(live.pwr) === 4}
-						class:text-orange-500={pwrToZone(live.pwr) === 5}
-						class:text-red-500={pwrToZone(live.pwr) === 6}
+						style="color: {zoneColor}"
 					>
 						<path
 							d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
