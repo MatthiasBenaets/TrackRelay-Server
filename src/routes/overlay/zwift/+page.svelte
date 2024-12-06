@@ -84,7 +84,7 @@
 			let response: LocationData = await fetchLocationData(live.lat, live.lon);
 			location = response;
 		},
-		Number(env.PUBLIC_REFRESH_RATE) * 20000
+		Number(env.PUBLIC_REFRESH_RATE) * 120000
 	);
 
 	$effect(() => {
@@ -98,7 +98,7 @@
 {#if live}
 	<div class="poppins-bold relative h-[1080px] w-[1920px] text-white">
 		<!-- Left data field -->
-		<div class="absolute left-[1%] top-[2%] h-[25%] w-[17%] rounded-xl bg-black/50">
+		<div class="absolute left-[1%] top-[2%] h-[25%] w-[17%] rounded-xl bg-black/75">
 			<div class="relative h-full w-full px-5">
 				<div class="flex h-[30%] flex-row">
 					<svg
@@ -150,7 +150,9 @@
 							</svg>
 						</div>
 						<div class="flex w-2/3 flex-col text-right">
-							<span class="-m-1 text-3xl">{Math.round($tweenCad / 2)}</span>
+							<span class="-m-1 text-3xl">
+								{Math.round($tweenCad * Number(env.PUBLIC_CADENCE_MULTIPLIER))}
+							</span>
 							<span class="-m-1 text-xl">RPM</span>
 						</div>
 					</div>
@@ -234,7 +236,7 @@
 
 		<!-- Middle data field -->
 		<div class="absolute top-[2%] h-[7%] w-full">
-			<div class="relative mx-auto h-full w-[40%] rounded-xl bg-black/50">
+			<div class="relative mx-auto h-full w-[40%] rounded-xl bg-black/75">
 				<div class="mx-5 grid h-full auto-cols-max grid-flow-col justify-between">
 					<div class="flex flex-row items-center justify-center">
 						<div class="text-4xl">{($tweenSpd * 3.6).toFixed(1)}</div>
@@ -278,7 +280,7 @@
 						</div>
 					</div>
 					<div class="flex flex-row items-center justify-center">
-						<div class="text-4xl">{Math.round($tweenAlt)}</div>
+						<div class="text-4xl">{Math.round($tweenAsc)}</div>
 						<div class="flex flex-col items-center pl-2">
 							<svg
 								xmlns="http://www.w3.org/2000/svg"

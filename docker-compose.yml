@@ -11,6 +11,7 @@ services:
     environment:
       - PUBLIC_API_TOKEN=token
       - PUBLIC_FTP=100
+      - PUBLIC_CADENCE_MULTIPLIER=1
       - PUBLIC_REFRESH_RATE=2.5
       - PUBLIC_WEIGHT=75
       - PUBLIC_ATHLETE=Athlete
