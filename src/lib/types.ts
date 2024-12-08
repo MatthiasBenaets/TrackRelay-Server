@@ -23,3 +23,25 @@ export interface LocationData {
 		village: string;
 	};
 }
+
+export interface DataPoint {
+	altitude: number;
+	cadence: number;
+	distance: number;
+	enhanced_altitude: number;
+	enhanced_speed: number;
+	heart_rate: number;
+	speed: number;
+	position_lat: number;
+	position_long: number;
+}
+
+export interface FitData {
+	activity: {
+		sessions: {
+			laps: {
+				records: DataPoint[];
+			}[];
+		}[];
+	};
+}
