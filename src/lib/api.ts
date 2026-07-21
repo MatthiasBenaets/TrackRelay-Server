@@ -23,8 +23,9 @@ export async function fetchLocationData(lat: number, lon: number) {
 			`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`,
 			{
 				headers: {
-					AccessControlAllowOrigin: '*',
-					Agent: 'http://localhost'
+					'User-Agent':
+						'TrackRelay-Server/1.0 (https://github.com/matthiasbenaets/TrackRelay-server)',
+					Accept: 'application/json'
 				}
 			}
 		);
