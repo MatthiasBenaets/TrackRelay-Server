@@ -1,2 +1,15 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { fetchLiveData } from '$lib/api';
+	import type { LiveData } from '$lib/types';
+
+	let live: LiveData | undefined = $state();
+
+	onMount(async () => {
+		setInterval(async () => {
+			live = await fetchLiveData();
+		}, 1000);
+	});
+</script>
+
+{JSON.stringify(live)}
