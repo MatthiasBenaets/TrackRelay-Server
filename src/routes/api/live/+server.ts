@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { z } from 'zod';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 import type { LiveData } from '$lib/types';
 
@@ -24,6 +25,14 @@ const liveDataSchema = z.object({
 let liveDataStore: LiveData = liveDataSchema.parse({});
 
 export const POST: RequestHandler = async ({ request }) => {
+	const authHeader = request.headers.get('authorization');
+
+	const token = env.AUTH_TOKEN;
+
+	if (!authHeader || authHeader !== token) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
 	try {
 		const payload = await request.json();
 

@@ -1,12 +1,6 @@
-import { env } from '$env/dynamic/public';
-
 export async function fetchLiveData() {
 	try {
-		const response = await fetch('/api/live', {
-			headers: {
-				Authorization: env.PUBLIC_API_TOKEN || ''
-			}
-		});
+		const response = await fetch('/api/live');
 		if (!response.ok) {
 			throw new Error('Failed to fetch live activity data');
 		}
