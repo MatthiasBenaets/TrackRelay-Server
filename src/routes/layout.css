@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+@layer base {
+	h1 {
+		@apply text-2xl font-bold;
+	}
+
+	button {
+		@apply my-1 cursor-pointer rounded border bg-gray-200 px-1 hover:bg-gray-400;
+	}
+}

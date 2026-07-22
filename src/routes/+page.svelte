@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Map from '$lib/components/Map.svelte';
+	import { resolve } from '$app/paths';
 	import { fetchLiveData } from '$lib/api';
 	import { msToTime, pwrToZone } from '$lib/utils';
+	import Map from '$lib/components/Map.svelte';
 	import type { LiveData } from '$lib/types';
 
 	let live: LiveData | undefined = $state();
@@ -17,7 +18,7 @@
 
 {#if live}
 	<div class="absolute z-10 bg-white/70 p-2 text-sm">
-		<h1 class="text-2xl font-bold">Live Tracking</h1>
+		<h1>Live Tracking</h1>
 		<p>Time: {msToTime(live.time)}</p>
 		<p>Distance: {(live.dist / 1000).toFixed(2)} km</p>
 		<p>Speed: {(live.spd * 3.6).toFixed(1)} km/h</p>
@@ -44,20 +45,21 @@
 			<p>Longitude: {live.lon}</p>
 		{/if}
 		<p>
-			<button
-				onclick={() => (toggle = !toggle)}
-				class="cursor-pointer rounded border bg-gray-200 px-1 hover:bg-gray-400"
-				>{toggle ? 'View less' : 'View more'}</button
-			>
+			<button onclick={() => (toggle = !toggle)}>{toggle ? 'View Less' : 'View More'}</button>
 		</p>
-		<p class="mt-1">
-			<button class="cursor-pointer rounded border bg-gray-200 px-1 hover:bg-gray-400">
+		<p>
+			<button>
 				<a
 					href="https://www.google.com/maps/dir/?api=1&destination={live.lat},{live.lon}"
 					target="_blank"
 				>
 					Navigate To
 				</a>
+			</button>
+		</p>
+		<p>
+			<button>
+				<a href={resolve('/live')}> Livestream </a>
 			</button>
 		</p>
 	</div>
