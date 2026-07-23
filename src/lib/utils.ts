@@ -1,4 +1,25 @@
 import { env } from '$env/dynamic/public';
+import FitParser from 'fit-file-parser';
+import { z } from 'zod';
+import type { FitData } from '$lib/types';
+
+export const liveDataSchema = z.object({
+	type: z.string().default('id'),
+	lat: z.number().default(0),
+	lon: z.number().default(0),
+	alt: z.number().default(0),
+	time: z.number().default(0),
+	dist: z.number().default(0),
+	spd: z.number().default(0),
+	cad: z.number().default(0),
+	hr: z.number().default(0),
+	pwr: z.number().default(0),
+	avgp: z.number().default(0),
+	asc: z.number().default(0),
+	desc: z.number().default(0),
+	cal: z.number().default(0),
+	grd: z.number().default(0)
+});
 
 export function getOverlays(): string[] {
 	const overlays = import.meta.glob('$lib/overlays/*.svelte');
@@ -37,3 +58,34 @@ export function pwrToZone(power: number) {
 }
 
 export const refreshDuration = Number(env.PUBLIC_REFRESH_RATE) * 1000;
+
+export function fitToJson(raw: ArrayBuffer | Uint8Array): Promise<FitData> {
+	const fitParser = new FitParser({
+		force: true,
+		speedUnit: 'm/s',
+		lengthUnit: 'm',
+		temperatureUnit: 'kelvin',
+		pressureUnit: 'bar',
+		elapsedRecordField: true,
+		mode: 'cascade'
+	});
+
+	const buffer = raw instanceof Uint8Array ? raw.buffer : raw;
+
+	return new Promise((resolve, reject) => {
+		fitParser.parse(buffer as ArrayBuffer, (error, data) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(data as FitData);
+			}
+		});
+	});
+}
+
+export function calculateGrade(alt1: number, alt2: number, dist1: number, dist2: number): number {
+	const dist = dist2 - dist1;
+	if (!dist || dist <= 0) return 0;
+	const alt = alt2 - alt1;
+	return (alt / dist) * 100;
+}
