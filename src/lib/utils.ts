@@ -19,12 +19,12 @@ export function msToTime(duration: number) {
 
 const ftp: number = Number(env.PUBLIC_FTP) | 0;
 export const zones = [
-	{ name: 'z1', power: ftp * 0.6, color: 'rgb(107 114 128)' },
-	{ name: 'z2', power: ftp * 0.75, color: 'rgb(59 130 246)' },
-	{ name: 'z3', power: ftp * 0.89, color: 'rgb(34 197 94)' },
-	{ name: 'z4', power: ftp * 1.04, color: 'rgb(234 179 8)' },
-	{ name: 'z5', power: ftp * 1.18, color: 'rgb(249 115 22)' },
-	{ name: 'z6', power: 10000, color: 'rgb(239 68 68)' }
+	{ name: 'z1', power: ftp * 0.6, color: 'rgb(107, 114, 128)' },
+	{ name: 'z2', power: ftp * 0.75, color: 'rgb(59, 130, 246)' },
+	{ name: 'z3', power: ftp * 0.89, color: 'rgb(34, 197, 94)' },
+	{ name: 'z4', power: ftp * 1.04, color: 'rgb(234, 179, 8)' },
+	{ name: 'z5', power: ftp * 1.18, color: 'rgb(249, 115, 22)' },
+	{ name: 'z6', power: 10000, color: 'rgb(239, 68, 68)' }
 ];
 export function pwrToZone(power: number) {
 	for (let i = 0; i < zones.length; i++) {
@@ -35,3 +35,5 @@ export function pwrToZone(power: number) {
 
 	return 1;
 }
+
+export const refreshDuration = Number(env.PUBLIC_REFRESH_RATE) * 1000;

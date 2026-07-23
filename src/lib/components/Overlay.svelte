@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import { refreshDuration } from '$lib/utils';
 	import { fetchLiveData } from '$lib/api';
 	import type { LiveData } from '$lib/types';
 
@@ -11,13 +12,15 @@
 	onMount(() => {
 		setInterval(async () => {
 			liveData = await fetchLiveData();
-		}, 2500);
+		}, refreshDuration);
 	});
 </script>
 
 {#if component}
-	{@const Component = component}
-	<Component data={liveData} />
+	{#if liveData}
+		{@const Component = component}
+		<Component data={liveData} />
+	{/if}
 {:else}
 	<p>Overlay not found</p>
 	<p>Available overlays:</p>
