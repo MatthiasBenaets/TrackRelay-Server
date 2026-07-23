@@ -29,8 +29,8 @@
 
 	{#if isPlayback}
 		<Playback>
-			{#snippet children(playbackData)}
-				<Component data={playbackData} />
+			{#snippet children(playbackData, course)}
+				<Component data={playbackData} {...course} />
 			{/snippet}
 		</Playback>
 	{:else if liveData}

@@ -46,3 +46,9 @@ export interface FitData {
 	activity?: FitActivity;
 	records?: DataPoint[];
 }
+
+export interface CourseData {
+	path: [number, number][];
+	gradient: [number, number][];
+	index: number;
+}

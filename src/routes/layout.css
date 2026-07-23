@@ -10,11 +10,6 @@
 		@apply my-1 cursor-pointer rounded border bg-gray-200 px-1 hover:bg-gray-400;
 	}
 
-	.gradient-left-right {
-		mask-image: radial-gradient(ellipse 99% 1000% at 50% 50%, black 40%, transparent 50%);
-		-webkit-mask-image: radial-gradient(ellipse 99% 1000% at 50% 50%, black 40%, transparent 50%);
-	}
-
 	.poppins-thin {
 		font-family: 'Poppins', serif;
 		font-weight: 100;

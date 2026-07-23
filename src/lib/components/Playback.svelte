@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { fitToJson, calculateGrade, liveDataSchema } from '$lib/utils';
-	import type { FitData, DataPoint, LiveData } from '$lib/types';
+	import type { CourseData, DataPoint, FitData, LiveData } from '$lib/types';
 	import type { Snippet } from 'svelte';
 
-	let { children }: { children: Snippet<[LiveData]> } = $props();
+	let { children }: { children: Snippet<[LiveData, CourseData]> } = $props();
 
 	let data = $state<FitData | undefined>();
 	let records = $state<DataPoint[]>([]);
@@ -23,6 +23,24 @@
 			return () => clearTimeout(timer);
 		}
 	});
+
+	let path = $derived(
+		records
+			.filter((r) => r.position_lat !== undefined && r.position_long !== undefined)
+			.map((r) => [r.position_lat!, r.position_long!] as [number, number])
+	);
+
+	let gradient = $derived(
+		records
+			.map((r) => {
+				const alt = r.enhanced_altitude ?? r.altitude;
+				if (alt === undefined || r.distance === undefined) return undefined;
+				return [r.distance, alt] as [number, number];
+			})
+			.filter((r): r is [number, number] => r !== undefined)
+	);
+
+	let courseData = $derived<CourseData>({ path, gradient, index: currentIndex });
 
 	let currentLiveData: LiveData | undefined = $derived.by(() => {
 		if (!records.length || currentIndex >= records.length) return undefined;
@@ -130,7 +148,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#if activeLiveData}
-	{@render children(activeLiveData)}
+	{@render children(activeLiveData, courseData)}
 {/if}
 
 {#if !records.length}
